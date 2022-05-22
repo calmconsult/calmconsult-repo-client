@@ -1,0 +1,22 @@
+{
+  "name": "calmconsult-repo",
+  "version": "1.0.0",
+  "description": "calm consult repository",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeslor/calmconsult-repo.git"
+  },
+  "keywords": [
+    "repository"
+  ],
+  "author": "Jeslor ssozi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jeslor/calmconsult-repo/issues"
+  },
+  "homepage": "https://github.com/jeslor/calmconsult-repo#readme"
+}
