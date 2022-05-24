@@ -17,8 +17,24 @@ app.engine("ejs", ejsmate);
 app.set("vews", path.join(__dirname, "views"));
 
 const port = process.env.PORT || 3000;
+const DBURL = process.env.DBURL || "mongodb://localhost:27017/calmconsult";
+mongoose.connect(DBURL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+const db = mongoose.connection;
+
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
+  console.log("Database connected");
+});
+
 app.listen(port, () => console.log(`App listenning at port ${port}`));
 
 app.get("/", (req, res) => {
   res.render("home");
+});
+
+app.get("/repositoryadmin/add", (req, res) => {
+  res.render("content/addcontent");
 });

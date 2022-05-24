@@ -96,7 +96,7 @@ body {
   top: 0;
   position: fixed;
   width: 100%;
-  z-index: 100;
+  z-index: 200;
   transition: all 400ms ease;
   -moz-transition: all 400ms ease;
   -webkit-transition: all 500ms ease;
@@ -568,4 +568,109 @@ p {
 .copyright-menu li {
   display: inline-block;
   padding-left: 20px;
+}
+
+.my-bottom-button {
+  background-color: var(--purplelight);
+  color: var(--lighterblack);
+  padding: 11px 15px;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  transition: ease-out 0.3s;
+  -webkit-transition: ease-out 0.3s;
+  -moz-transition: ease-out 0.3s;
+  -ms-transition: ease-out 0.3s;
+  -o-transition: ease-out 0.3s;
+  -webkit-box-shadow: 0px 0px 31px -11px rgba(0, 0, 0, 0.77);
+  -moz-box-shadow: 0px 0px 31px -11px rgba(0, 0, 0, 0.77);
+  box-shadow: 0px 0px 31px -11px rgba(0, 0, 0, 0.77);
+  border: 1px solid rgb(92, 89, 89);
+  animation: wigo 3s infinite;
+  -webkit-animation: wigo 3s infinite;
+  position: relative;
+  animation-direction: alternate;
+}
+
+.my-bottom-button:hover {
+  background-color: var(--purple);
+  border: none;
+  color: var(--white);
+}
+
+.my-bottom-button svg {
+  font-size: 20px;
+}
+
+.my-bottom-button:hover svg {
+  color: var(--white);
+}
+
+.down-top {
+  bottom: -12%;
+  z-index: 999;
+  right: 28px;
+  position: fixed;
+  cursor: pointer;
+  -webkit-transition: all 0.7s ease-in-out;
+  -moz-transition: all 0.7s ease-in-out;
+  -o-transition: all 0.7s ease-in-out;
+  -ms-transition: all 0.7s ease-in-out;
+  transition: all 0.7s ease-in-out;
+}
+
+.down-up {
+  bottom: 10%;
+  transition: all 0.7s ease-in-out;
+  -webkit-transition: all 0.7s ease-in-out;
+  -moz-transition: all 0.7s ease-in-out;
+  -ms-transition: all 0.7s ease-in-out;
+  -o-transition: all 0.7s ease-in-out;
+}
+
+.repository .repoNav {
+  margin-top: -5rem;
+  padding-top: 1rem;
+  background-color: var(--purplelight);
+  color: white;
+  text-align: center;
+  font-size: 1.3rem;
+  padding-bottom: 1rem;
+  position: sticky;
+  top: 5rem;
+  z-index: 100;
+}
+.repository .repoNav i {
+  padding-right: 1rem;
+}
+
+.repository .recently-added {
+  padding-top: 3rem;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.repository .recently-added ul {
+  list-style-type: none;
+  padding-left: 0rem;
+}
+
+.repository .recently-added ul li {
+  margin-bottom: 0.8rem;
+}
+
+.repository .recently-added h4,
+.repository .recently-added .article-abstract {
+  font-size: 17px;
+  margin-bottom: 0rem;
+}
+.repository .recently-added h4 a {
+  color: var(--blue);
+}
+
+.repository .sidemenu {
+  padding: 1rem;
+  background-color: var(--lighterblack);
 }

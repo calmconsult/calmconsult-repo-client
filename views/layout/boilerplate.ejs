@@ -26,11 +26,15 @@
   <body>
     <%-include('../partials/Navbar') %>
 
-    <main class="section-layout"><%-body %></main>
+    <main class="section-layout repository">
+      <h1 class="repoNav">
+        <i class="fas fa-home"></i>Welcome to Calm consult Repository
+      </h1>
+      <%-body %>
+    </main>
     <%- include('../partials/Footer') %>
-    <script src="/js/lib/jquery-3.6.0.min.js"></script>
-    <script src="/js/lib/owl.carousel.min.js"></script>
-    <script src="/js/lib/bootstrap.min.js"></script>
+    <script src="/js/libs/jquery-3.4.1.min.js"></script>
+    <script src="/js/libs/bootstrap.min.js"></script>
     <script src="/js/main.js"></script>
     <script>
       // Example starter JavaScript for disabling form submissions if there are invalid fields
