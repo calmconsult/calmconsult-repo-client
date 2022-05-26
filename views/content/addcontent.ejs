@@ -1,0 +1,118 @@
+<% (layout('/layout/boilerplate')) %>
+<div class="container recently-added">
+  <div class="row">
+    <div class="col-lg-9">
+      <h2>Add a new publication</h2>
+      <div class="content-form">
+        <form
+          action="/repositoryadmin/add"
+          method="POST"
+          class="needs-validation"
+          novalidate
+        >
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input
+              type="text"
+              name="title"
+              class="form-control"
+              id="title"
+              placeholder="Humans and the new technology"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="author">author(s)</label>
+            <input
+              type="text"
+              name="author"
+              class="form-control"
+              id="author"
+              placeholder="Nakamatte Edith, Kiberu samuel"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="publishDate">Date of Publication</label>
+            <input
+              type="date"
+              name="publishDate"
+              class="form-control"
+              id="publishDate"
+              placeholder="2020-04"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="collection">Collection</label>
+            <input
+              type="text"
+              name="collection"
+              class="form-control"
+              id="collection"
+              placeholder="Theses and Dissertations"
+            />
+          </div>
+          <div class="form-group">
+            <label for="collection">subject</label>
+            <input
+              type="text"
+              name="collection"
+              class="form-control"
+              id="collection"
+              placeholder="Child abuse"
+            />
+          </div>
+          <div class="form-group">
+            <label for="abstract">abstract</label>
+            <textarea
+              name="abstract"
+              class="form-control"
+              id="abstract"
+              rows="5"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="accessRestriction">Access restriction</label>
+            <select
+              name="accessRestriction"
+              multiple
+              class="form-control"
+              id="accessRestriction"
+            >
+              <option selected disabled value="">
+                Choose an access level...
+              </option>
+              <option value="public">Public</option>
+              <option value="private">Private</option>
+            </select>
+            <div class="invalid-feedback">please choose access level.</div>
+          </div>
+          <div class="form-group custom-file mb-5">
+            <input
+              name="uploadedDocument"
+              type="file"
+              class="custom-file-input doc1"
+              id="uploadContent"
+              required
+            />
+            <label class="custom-file-label" for="uploadContent"
+              >Choose file...</label
+            >
+            <div class="invalid-feedback">
+              Choose a pdf file of from computer
+            </div>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="col-md-3 my-3">
+            <button class="btn btn-primary calm-button" type="submit">
+              Upload Content
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-lg-3"><%- include('../partials/sidemenu') %></div>
+  </div>
+</div>

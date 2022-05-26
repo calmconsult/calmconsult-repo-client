@@ -7,15 +7,12 @@ const contentSchema = new Schema({
     required: true,
     unique: true,
   },
-  author: {
-    type: String,
-    require: true,
-  },
-  description: {
+  authors: [],
+  abstract: {
     type: String,
     required: true,
   },
-  absract: {
+  subject: {
     type: String,
     required: true,
   },
@@ -23,8 +20,22 @@ const contentSchema = new Schema({
     type: String,
     required: true,
   },
+  contentKey: {
+    type: String,
+    required: true,
+  },
   publishDate: {
     type: String,
     required: true,
   },
+  accessRestriction: {
+    type: String,
+    enum: ["private", "public"],
+    default: "public",
+  },
+  collections: [],
 });
+
+const Content = mongoose.model("Content", contentSchema);
+
+module.exports = Content;

@@ -4,6 +4,36 @@
     <div class="col-lg-9">
       <h2>recently added</h2>
       <ul class="recently-added-articles">
+        <% for(const content of recentlyAdded) {%>
+        <li>
+          <h4>
+            <a href="/calmconsultdocuments/<%=content.id %> ">
+              <%=content.title %>
+            </a>
+          </h4>
+          <div class="article-muted text-muted">
+            <span class="author">
+              <% for(const author of content.authors) {%>
+              <small class="authorcapital"> <%= author %> </small>
+              , <% } %>
+            </span>
+            <span class="publisherDate">
+              <small>
+                (
+                <span class="publisher"> Calm Consult </span>
+                <span class="date"> <%=content.publishDate %> </span>
+                )
+              </small>
+            </span>
+          </div>
+          <div class="article-abstract">
+            The major aim of this study was to develop a records preservation
+            system at Uganda Prisons Service [UPS]. The objectives of the study
+            were to study the current systems at the Uganda Prisons Service that
+            helped to identify
+          </div>
+        </li>
+        <% } %>
         <li>
           <h4>
             <a href="/singledocument/id">
@@ -69,7 +99,7 @@
             >
           </h4>
           <div class="article-muted text-muted">
-            <span class="author">
+            <span class="doc-author">
               <small> Sabano Lydia </small>
             </span>
             <span class="publisherDate">
@@ -118,28 +148,6 @@
         </li>
       </ul>
     </div>
-    <div class="col-lg-3">
-      <div class="sidemenu">
-        <div class="search">
-          <form action="">
-            <fieldset>
-              <div class="input-group">
-                <input
-                  placeholder="Search"
-                  type="text"
-                  class="ds-text-field form-control"
-                  name="query"
-                />
-                <span>
-                  <button type="submit">
-                    <i class="fas fa-search"></i>
-                  </button>
-                </span>
-              </div>
-            </fieldset>
-          </form>
-        </div>
-      </div>
-    </div>
+    <div class="col-lg-3"><%-include('./partials/sidemenu') %></div>
   </div>
 </div>

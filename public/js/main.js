@@ -1,11 +1,11 @@
 $(document).ready(function () {
-  $(window).on("scroll", function () {
-    if ($(window).scrollTop() > 50) {
-      $("#main-navbar").addClass("show");
-    } else {
-      $("#main-navbar").removeClass("show");
-    }
-  });
+  //   $(window).on("scroll", function () {
+  //     if ($(window).scrollTop() > 50) {
+  //       $("#main-navbar").addClass("show");
+  //     } else {
+  //       $("#main-navbar").removeClass("show");
+  //     }
+  //   });
 
   // scroll to top
   // ====================

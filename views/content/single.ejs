@@ -1,0 +1,60 @@
+<% (layout('/layout/boilerplate')) %>
+<div class="container single-document">
+  <div class="row">
+    <div class="col-lg-9">
+      <h2><%=document.title %></h2>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="imgae">
+            <img
+              alt="No Thumbnail [100%x160]"
+              data-src="holder.js/100%x160/text:No Thumbnail"
+              style="height: 160px; width: 100%; display: block"
+              src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjA3IiBoZWlnaHQ9IjE1OCIgdmlld0JveD0iMCAwIDIwNyAxNTgiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMjA3IiBoZWlnaHQ9IjE1OCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjU5LjA0OTk5OTIzNzA2MDU1IiB5PSI3OSIgc3R5bGU9ImZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMHB0O2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPk5vIFRodW1ibmFpbDwvdGV4dD48L2c+PC9zdmc+"
+              data-holder-rendered="true"
+            />
+          </div>
+          <div class="small-text date">
+            <h5>Date:</h5>
+            <%=document.publishDate %>
+          </div>
+          <div class="small-text document-link">
+            <h5>Document link:</h5>
+            <a href="<%=document.contentUrl %> "><%=document.contentKey %> </a>
+          </div>
+          <div class="small-text authors">
+            <h5>Author(s):</h5>
+            <p>
+              <% for(const author of document.authors) {%>
+              <span class="authorcapital"><%=author %></span>, <% } %>
+            </p>
+          </div>
+          <div class="small-text type">
+            <h5>Subject:</h5>
+            <p><%=document.subject%></p>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <h5 class="abstract-head">Abstract:</h5>
+          <p class="small-text abstract"><%= document.abstract %></p>
+          <div class="document-uri">
+            <a href="/calmconsultdocuments/<%=id  %> "
+              >repository.calmconsultug.com/<%=id %>
+            </a>
+          </div>
+          <div class="small-text collections">
+            <% if(document.collections.length){%> <% for(const collection of
+            document.collections){ %>
+            <a href="/documents/collections/<%=collection%> "
+              ><%=collection %>
+            </a>
+            <%} %> <%} %>
+          </div>
+        </div>
+      </div>
+
+      <div></div>
+    </div>
+    <div class="col-lg-3"><%-include('../partials/sidemenu') %></div>
+  </div>
+</div>
