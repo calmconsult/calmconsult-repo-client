@@ -43,4 +43,28 @@ $(document).ready(function () {
   $(".dropdown").on("hide.bs.dropdown", function () {
     $(this).find(".dropdown-menu").first().stop().slideUp();
   });
+
+  const documentLoader1 = document.querySelector(".doc1");
+  if (documentLoader1) {
+    documentLoader1.addEventListener("change", function (e) {
+      let fileName = document.getElementById("uploadContent").files[0].name;
+      let nextSibling = e.target.nextElementSibling;
+      nextSibling.innerText = fileName;
+    });
+  }
+
+  const deleteDocument = document.getElementById("delete-document");
+  const deletecontainer = document.getElementById("delete-overlay");
+  const noDelete = document.getElementById("no-delete");
+  if (deleteDocument) {
+    deleteDocument.addEventListener("click", (e) => {
+      e.preventDefault();
+      deletecontainer.style.display = "block";
+    });
+  }
+  if (noDelete) {
+    noDelete.addEventListener("click", () => {
+      deletecontainer.style.display = "none";
+    });
+  }
 });

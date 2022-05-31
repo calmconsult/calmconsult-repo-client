@@ -24,7 +24,15 @@
     </li>
     <li><a href="/collections">Collections</a></li>
     <li><a href="/authors">Authors</a></li>
-    <li><a href="/repositoryadmin/add">Add document</a></li>
+    <li><a href="/repositoryadmin/add">Add new document</a></li>
+    <% if(currPage==='singledocument'){ %>
+    <li>
+      <a href="/calmconsultdocuments/<%=id %>/edit">Edit this document</a>
+    </li>
+    <li class="danger">
+      <a id="delete-document" href="">Delete this document</a>
+    </li>
+    <% } %>
   </ul>
   <h3>Login</h3>
   <div class="sections login">

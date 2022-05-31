@@ -630,6 +630,10 @@ p {
   -o-transition: all 0.7s ease-in-out;
 }
 
+.repository {
+  position: relative;
+}
+
 .repository .repoNav {
   margin-top: -5rem;
   padding-top: 1rem;
@@ -682,11 +686,54 @@ p {
 .repository .authorcapital {
   text-transform: capitalize;
 }
+.repository #delete-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.436);
+  width: 100%;
+  height: 100%;
+  z-index: 800;
+  display: none;
+}
+.repository #delete-overlay .content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+.repository #delete-overlay .content .inner-content {
+  width: 500px;
+  background-color: var(--lighterblack);
+  display: flex;
+  padding: 2rem;
+  flex-direction: column;
+  height: fit-content;
+  margin-top: 13rem;
+  border-radius: 7px;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  -ms-border-radius: 7px;
+  -o-border-radius: 7px;
+}
+.repository #delete-overlay .content .inner-content button {
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
 
 .repository .sidemenu {
   padding-top: 2rem;
   padding-bottom: 1rem;
   background-color: var(--lighterblack);
+  -webkit-box-shadow: 0px 0px 10px -3px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 10px -3px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 10px -3px rgba(0, 0, 0, 0.75);
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
 }
 .repository .sidemenu h3 {
   background-color: var(--purple);
@@ -728,6 +775,13 @@ p {
   -ms-transition: all 0.28s ease;
   -o-transition: all 0.28s ease;
 }
+.repository .sidemenu .sections.quick-links li.danger {
+  background-color: rgb(174, 5, 5);
+  color: white;
+}
+.repository .sidemenu .sections.quick-links li.danger:hover {
+  background-color: rgb(174, 39, 39);
+}
 .repository .sidemenu .sections.quick-links li:hover {
   background-color: var(--whitedark);
   color: var(--white);
@@ -768,4 +822,9 @@ p {
 
 .repository .single-document a {
   color: var(--blue);
+}
+
+.repository .edit-form .custom-file-label {
+  height: fit-content;
+  padding-right: 5rem;
 }

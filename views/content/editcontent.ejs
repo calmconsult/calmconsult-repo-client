@@ -2,18 +2,19 @@
 <div class="container recently-added">
   <div class="row">
     <div class="col-lg-9">
-      <h2>Add a new publication</h2>
+      <h2>Edit this publication</h2>
       <div class="content-form">
         <form
-          action="/repositoryadmin/add"
+          action="/calmconsultdocuments/<%=document.id%>/edit?_method=PUT"
           method="POST"
-          class="needs-validation"
+          class="needs-validation edit-form"
           novalidate
         >
           <div class="form-group">
             <label for="title">Title</label>
             <input
               type="text"
+              value="<%=document.title%>"
               name="title"
               class="form-control"
               id="title"
@@ -25,6 +26,7 @@
             <label for="author">author(s)</label>
             <input
               type="text"
+              value="<%=document.authors%>"
               name="author"
               class="form-control"
               id="author"
@@ -35,7 +37,8 @@
           <div class="form-group">
             <label for="publishDate">Date of Publication</label>
             <input
-              type="date"
+              value="<%=document.publishDate%> "
+              type="text"
               name="publishDate"
               class="form-control"
               id="publishDate"
@@ -47,6 +50,7 @@
             <label for="collection">Collection</label>
             <input
               type="text"
+              value="<%=document.collections%>"
               name="collection"
               class="form-control"
               id="collection"
@@ -59,6 +63,7 @@
             <input
               type="text"
               name="subject"
+              value="<%=document.subject%>"
               class="form-control"
               id="subject"
               placeholder="Child abuse"
@@ -72,7 +77,10 @@
               class="form-control"
               id="abstract"
               rows="5"
-            ></textarea>
+              required
+            >
+<%=document.abstract%> </textarea
+            >
           </div>
 
           <div class="form-group">
@@ -82,35 +90,37 @@
               multiple
               class="form-control"
               id="accessRestriction"
+              value="<%=document.accessRestriction%> "
               required
             >
-              <option selected disabled value="">
-                Choose an access level...
-              </option>
-              <option value="public">Public</option>
+              <%if(document.accessRestriction==='public'){%>
+              <option selected value="public">Public</option>
               <option value="private">Private</option>
+              <%}else{%>
+              <option value="public">Public</option>
+              <option selected value="private">Private</option>
+              <%}%>
             </select>
             <div class="invalid-feedback">please choose access level.</div>
           </div>
-          <div class="form-group custom-file mb-5">
+          <!-- <div class="form-group custom-file mb-5">
             <input
               name="uploadedDocument"
               type="file"
               class="custom-file-input doc1"
               id="uploadContent"
-              required
             />
             <label class="custom-file-label" for="uploadContent"
-              >Choose file...</label
-            >
+              ><%=document.contentKey%>
+            </label>
             <div class="invalid-feedback">
               Choose a pdf file of from computer
             </div>
             <div class="valid-feedback">Looks good!</div>
-          </div>
+          </div> -->
           <div class="col-md-3 my-3">
             <button class="btn btn-primary calm-button" type="submit">
-              Upload Content
+              Update details
             </button>
           </div>
         </form>
