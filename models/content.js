@@ -7,7 +7,10 @@ const contentSchema = new Schema({
     required: true,
     unique: true,
   },
-  authors: [],
+  authors: {
+    type: String,
+    required: true,
+  },
   abstract: {
     type: String,
     required: true,
@@ -34,15 +37,18 @@ const contentSchema = new Schema({
     enum: ["private", "public"],
     default: "public",
   },
-  collections: [],
+  collections: {
+    type: String,
+    required: true,
+  },
 });
 
 contentSchema.index({
   title: "text",
-  authors: ["text"],
+  authors: "text",
   abstract: "text",
   subject: "text",
-  // collections: ["text"],
+  collections: "text",
 });
 
 const Content = mongoose.model("Content", contentSchema);

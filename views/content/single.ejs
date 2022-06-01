@@ -24,10 +24,7 @@
           </div>
           <div class="small-text authors">
             <h5>Author(s):</h5>
-            <p>
-              <% for(const author of document.authors) {%>
-              <span class="authorcapital"><%=author %></span>, <% } %>
-            </p>
+            <p><span class="authorcapital"><%=document.authors %></span>,</p>
           </div>
           <div class="small-text type">
             <h5>Subject:</h5>
@@ -45,12 +42,11 @@
           </div>
           <div class="small-text collections">
             <h5>Collections</h5>
-            <% if(document.collections.length){%> <% for(const collection of
-            document.collections){ %>
+            <% for(const collection of document.collections.split(',')){ %>
             <a href="/documents/collections/<%=collection%> "
               ><%=collection %>
             </a>
-            <%} %> <%} %>
+            <%} %>
           </div>
         </div>
       </div>

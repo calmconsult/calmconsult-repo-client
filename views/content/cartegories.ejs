@@ -4,9 +4,14 @@
     <div class="col-lg-9 cartegories">
       <h2>Showing <%=currPage%></h2>
       <ul class="category-list">
-        <% for(const collection in data){%>
+        <% for(const collection of data){%> <% if(collection.includes(',')) {%>
+        <% for(coll of collection.split(',')) {%>
+        <li><a href="/<%=currPage%>/<%=coll%> "><%=coll %></a></li>
+
+        <% } %> <% }else{%>
         <li><a href="/<%=currPage%>/<%=collection%> "><%=collection %></a></li>
-        <%} %>
+
+        <%} %> <%} %>
       </ul>
       <%-include('../partials/recentlyAdded')%>
     </div>

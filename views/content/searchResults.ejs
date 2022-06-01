@@ -2,18 +2,7 @@
 <div class="container single-document">
   <div class="row">
     <div class="col-lg-9 cartegories">
-      <h2>Showing <%=cartegories%></h2>
-      <ul class="category-list">
-        <% for(const collection of data){%> <% if(collection.includes(',')) {%>
-          <% for(coll of collection.split(',')) {%>
-          <li><a href="/<%=cartegories%>/<%=coll%> "><%=coll %></a></li>
-  
-          <% } %> <% }else{%>
-          <li><a href="/<%=cartegories%>/<%=collection%> "><%=collection %></a></li>
-  
-          <%} %> <%} %>
-      </ul>
-      <h2><span><%=cartegories%> /</span> <%=currPage %></h2>
+      <h2>Showing search results of  <%=query %>  </h2>
       <ul class="recently-added-articles">
         <% for(const content of documents) {%>
         <li>
@@ -50,26 +39,26 @@
       <p class="pr-2 d-none d-md-block">pages</p>
       <% if(pages || page > 1) {%>
         <% if(page>1){ %>
-          <% if(id){%>
-          <a class="extend-show-more " href="/<%=cartegories%>/<%=currPage%>/<%=id%>?page=<%=(page-1)%>" >Prev</a>
+          <% if(searchMode){%>
+          <a class="extend-show-more " href="/calmconsult/repoitorysearch/<%=(page-1)%>?query=<%=query%>&searchMode=<%=searchMode%>" >Prev</a>
           <%}else{%>
-            <a class="extend-show-more " href="/<%=cartegories%>/<%=currPage%>?page=<%=(page-1)%>" >Prev</a>
+            <a class="extend-show-more " href="/calmconsult/repoitorysearch/<%=(page-1)%>?query=<%=query%>" >Prev</a>
           <%} %> 
           <p class="px-1">...</p>
         <%} %>     
         <% for(let i =page; i<=totalpages; i++){%>
-          <% if (id) {%>
-            <a class="page-holder <%= page==i&&'active' %> " href="/<%=cartegories%>/<%=currPage%>/<%=id%>?page=<%=i%>" ><%=i %> </a>
+          <% if (searchMode) {%>
+            <a class="page-holder <%= page==i&&'active' %> " href="/calmconsult/repoitorysearch/<%=i%> ?query=<%=query%>&searchMode=<%=searchMode%>" ><%=i %> </a>
           <%}else{%>
-            <a class="page-holder <%= page==i&&'active' %> " href="/<%=cartegories%>/<%=currPage%>?page=<%=i%>" ><%=i %> </a>
+            <a class="page-holder <%= page==i&&'active' %> " href="/calmconsult/repoitorysearch/<%=i%>?query=<%=query%>"><%=i %> </a>
           <% } %>
         <%} %>             
         <% if(page<pages) {%> 
           <p class="px-1">...</p>
-          <% if(id){%>
-            <a class="extend-show-more " href="/<%=cartegories%>/<%=currPage%>/<%=id%>?page=<%=(page+1)%>" >Next</a>
+          <% if(searchMode){%>
+            <a class="extend-show-more " href="/calmconsult/repoitorysearch/<%=(page+1)%>?query=<%=query%>&searchMode=<%=searchMode%>" >Next</a>
             <%}else{%>
-              <a class="extend-show-more " href="/<%=cartegories%>/<%=currPage%>?page=<%=(page+1)%>" >Next</a>
+              <a class="extend-show-more " href="/calmconsult/repoitorysearch/<%=(page+1)%>?query=<%=query%>" >Next</a>
             <%} %>
         <% } %> 
       <% } %> 

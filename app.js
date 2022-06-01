@@ -43,12 +43,9 @@ app.get(
     const recentlyAdded = await Content.find({ accessRestriction: "public" })
       .sort({ dateAdded: -1 })
       .limit(7);
-    let { authors, collections } = await Cartegory.findOne();
-    authors = [...Object.keys(authors)];
-    authors = authors.length > 10 ? authors.slice(0, 10) : authors;
-    collections = [...Object.keys(collections)];
-    collections =
-      collections.length > 10 ? collections.slice(0, 10) : collections;
+    let alldocs = await Content.find({ accessRestriction: "public" });
+    const authors = [...new Set(alldocs.map((el) => el.authors))];
+    const collections = [...new Set(alldocs.map((el) => el.collections))];
     res.render("home", {
       recentlyAdded,
       currPage: "home",
@@ -64,7 +61,9 @@ app.get("/repositoryadmin/add", (req, res) => {
 app.post(
   "/repositoryadmin/add",
   asyncWrapper(async (req, res) => {
-    let { author, collection } = req.body;
+    let { authors: author, collections: collection } = req.body;
+    author = author.split(",");
+    collection = collection.split(",");
 
     const newContent = new Content({
       ...req.body,
@@ -120,8 +119,13 @@ app.get(
   "/:cartegories",
   asyncWrapper(async (req, res) => {
     const { cartegories } = req.params;
-    const { authors, collections } = await Cartegory.findOne();
-    const data = cartegories === "authors" ? authors : collections;
+    let data = await Content.find({ accessRestriction: "public" });
+    if (cartegories === "authors") {
+      data = [...new Set(data.map((el) => el.authors))];
+    } else {
+      data = [...new Set(data.map((el) => el.collections))];
+    }
+
     const recentlyAdded = await Content.find().sort({ dateAdded: -1 }).limit(6);
 
     res.render("content/cartegories", {
@@ -137,18 +141,44 @@ app.get(
   asyncWrapper(async (req, res) => {
     let page = Number(req.query.page || 1);
     const { query, searchMode } = req.query;
-    console.log(query, searchMode);
+
     let documents;
-    if (searchMode === "authors") {
-      documents = await Content.find({ authors: { $in: [query] } });
+    let totalItems;
+    if (searchMode === "authors" || searchMode === "collections") {
+      documents = await Content.find({
+        searchMode: {
+          $text: { $search: query },
+        },
+      });
+      totalItems = await Content.find({
+        searchMode: {
+          $text: { $search: query },
+        },
+      }).countDocuments();
+    } else {
+      documents = await Content.find(
+        { $text: { $search: query } },
+        { score: { $meta: "textScore" } }
+      ).sort({ score: { $meta: "textScore" } });
+      totalItems = await Content.find({
+        $text: { $search: query },
+      }).countDocuments();
     }
-    if (searchMode === "collections") {
-      documents = await Content.find({ collections: { $in: [query] } });
-    }
-    if (searchMode === undefined || searchMode === "general") {
-      documents = await Content.find({ $text: { $search: query } });
-    }
-    console.log(documents);
+    documents = documents.slice((page - 1) * 10, page * 10);
+    let perPage = 10;
+    let pages = Math.ceil(totalItems / perPage);
+    const totalpages = page + 3 >= pages ? pages : page + 3;
+
+    res.render("content/searchResults", {
+      documents,
+      searchMode,
+      query,
+      totalItems,
+      page,
+      pages,
+      totalpages,
+      currPage: "search results",
+    });
   })
 );
 
@@ -157,28 +187,42 @@ app.get(
   asyncWrapper(async (req, res) => {
     let page = Number(req.query.page || 1);
     const { cartegories, singleCategory } = req.params;
-    const { authors, collections } = await Cartegory.findOne();
-    const data = cartegories === "authors" ? authors : collections;
-    let documents;
-    let totalItems;
-    if (cartegories === "collections") {
-      totalItems = await Content.find({
-        collections: { $in: [singleCategory] },
-      }).countDocuments();
-      documents = await Content.find({ collections: { $in: [singleCategory] } })
-        .sort({ dateAdded: -1 })
-        .limit(10)
-        .skip((page - 1) * 10);
-    }
+    let data = await Content.find({ accessRestriction: "public" });
     if (cartegories === "authors") {
-      totalItems = await Content.find({
-        authors: { $in: [singleCategory] },
-      }).countDocuments();
-      documents = await Content.find({ authors: { $in: [singleCategory] } })
-        .sort({ dateAdded: -1 })
-        .limit(10)
-        .skip((page - 1) * 10);
+      data = [...new Set(data.map((el) => el.authors))];
+    } else {
+      data = [...new Set(data.map((el) => el.collections))];
     }
+
+    let documents = await Content.find({ cartegories: singleCategory }).sort({
+      dateAdded: -1,
+    });
+    let totalItems = await Content.find({ cartegories: singleCategory })
+      .sort({ dateAdded: -1 })
+      .countDocuments();
+    documents = documents.slice((page - 1) * 10, page * 10);
+    // const { authors, collections } = await Cartegory.findOne();
+    // const data = cartegories === "authors" ? authors : collections;
+    // let documents;
+    // let totalItems;
+    // if (cartegories === "collections") {
+    //   totalItems = await Content.find({
+    //     collections: { $in: [singleCategory] },
+    //   }).countDocuments();
+    //   documents = await Content.find({ collections: { $in: [singleCategory] } })
+    //     .sort({ dateAdded: -1 })
+    //     .limit(10)
+    //     .skip((page - 1) * 10);
+    // }
+    // if (cartegories === "authors") {
+    //   totalItems = await Content.find({
+    //     authors: { $in: [singleCategory] },
+    //   }).countDocuments();
+    //   documents = await Content.find({ authors: { $in: [singleCategory] } })
+    //     .sort({ dateAdded: -1 })
+    //     .limit(10)
+    //     .skip((page - 1) * 10);
+    // }
     let perPage = 10;
     let pages = Math.ceil(totalItems / perPage);
     const totalpages = page + 3 >= pages ? pages : page + 3;
@@ -209,13 +253,11 @@ app.put(
   "/calmconsultdocuments/:id/edit",
   asyncWrapper(async (req, res) => {
     const { id } = req.params;
-    let { author, collection } = req.body;
+    let { authors: author, collections: collection } = req.body;
     author = author.split(",");
     collection = collection.split(",");
     await Content.findByIdAndUpdate(id, {
       ...req.body,
-      authors: author,
-      collections: collection,
     });
     res.redirect("/");
   })

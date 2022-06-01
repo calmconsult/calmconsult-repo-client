@@ -11,9 +11,9 @@
 
       <h5>Authors</h5>
       <ul class="category-list">
-        <% for(const author of authors){%>
+        <% if(authors) {%> <% for(const author of authors){%>
         <li><a href="/authors/<%=author%> "><%=author%></a></li>
-        <%} %>
+        <%} %> <% } %>
       </ul>
 
       <%-include('./partials/recentlyAdded')%>
