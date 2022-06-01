@@ -1,0 +1,51 @@
+<% (layout('/layout/boilerplate')) %>
+
+<div class="container recently-added">
+  <div class="row">
+    <div class="col-lg-9">
+      <div class="main loginsection">
+        <input type="checkbox" id="chk" aria-hidden="true" />
+
+        <div class="signup">
+          <form action="/calmconsult/register" method="POST">
+            <label for="chk" aria-hidden="true">Sign up</label>
+            <input
+              type="text"
+              name="username"
+              placeholder="User name"
+              required
+            />
+            <input type="email" name="email" placeholder="Email" required />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              required
+            />
+            <button type="submit">Sign up</button>
+          </form>
+        </div>
+
+        <div class="login">
+          <form action="/calmconsult/login" method="POST">
+            <label for="chk" aria-hidden="true">Login</label>
+            <input
+              type="text"
+              name="username"
+              placeholder="username"
+              required
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              required
+            />
+            <button type="submit">Login</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3"><%- include('../partials/sidemenu') %></div>
+  </div>
+</div>

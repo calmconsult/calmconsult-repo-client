@@ -2,12 +2,16 @@ const express = require("express"),
   path = require("path"),
   Content = require("./models/content"),
   Cartegory = require("./models/cartegories"),
+  User = require("./models/user"),
   ejsmate = require("ejs-mate"),
   mongoose = require("mongoose"),
   { v4: uuid } = require("uuid"),
   methodOverride = require("method-override"),
   appError = require("./utils/appError"),
   asyncWrapper = require("./utils/asyncWrapper"),
+  passport = require("passport"),
+  LocalStrategy = require("passport-local"),
+  expressSsession = require("express-session"),
   app = express();
 
 app.use(express.json());
@@ -16,6 +20,24 @@ app.use(express.static(__dirname));
 app.use(methodOverride("_method"));
 // app.use(favicon(__dirname + "/public/images/favicon.png"));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  expressSsession({
+    secret: "calm not secret",
+    resave: false,
+    saveUninitialized: true,
+    // cookie: { secure: true }
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+app.use((req, res, next) => {
+  res.locals.currUser = req.user;
+  next();
+});
 
 app.set("view engine", "ejs");
 
@@ -54,6 +76,49 @@ app.get(
     });
   })
 );
+app.get("/calmconsult/register", (req, res) => {
+  res.render("user/register", { currPage: "register" });
+});
+
+app.post(
+  "/calmconsult/login",
+  passport.authenticate("local", {
+    failureRedirect: "/",
+    failureFlash: true,
+  }),
+  (req, res) => {
+    res.redirect("/");
+  }
+);
+
+app.post(
+  "/calmconsult/register",
+  asyncWrapper(async (req, res, next) => {
+    try {
+      const { username, email, password } = req.body;
+      const registerUser = new User({ username, email });
+      const registeredUSer = await User.register(registerUser, password);
+      req.login(registeredUSer, (err) => {
+        if (err) return next(err);
+        res.redirect("/");
+      });
+    } catch (error) {
+      res.render("user/register", {
+        currPage: "register",
+        errormsg: error.message,
+      });
+    }
+  })
+);
+
+app.get("/calmconsult/logout", (req, res, next) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
+  });
+});
 
 app.get("/repositoryadmin/add", (req, res) => {
   res.render("content/addcontent", { currPage: "adddocument" });

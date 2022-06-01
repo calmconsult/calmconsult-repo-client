@@ -27,11 +27,17 @@
     <%-include('../partials/Navbar') %>
 
     <main class="section-layout repository">
-      <h1 class="repoNav">
-        <a href="/">
-          <i class="fas fa-home"></i>Welcome to Calm consult Repository
-        </a>
-      </h1>
+      <div class="repoNav">
+        <div class="container d-flex">
+          <a href="/">
+            <i class="fas fa-home"></i>Welcome to Calm consult Repository
+          </a>
+          <% if(currUser) {%>
+          <span><i class="fas fa-user-alt"></i> <%=currUser.username%> </span>
+          <a class="logout" href="/calmconsult/logout">Logout</a>
+          <% } %>
+        </div>
+      </div>
       <% if(currPage ==="singledocument") {%>
       <div id="delete-overlay">
         <div class="content">
