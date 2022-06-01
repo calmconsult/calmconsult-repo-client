@@ -1,0 +1,15 @@
+<%(layout('/layout/boilerplate')) %>
+<div class="container single-document">
+  <div class="row">
+    <div class="col-lg-9 cartegories">
+      <h2>Showing <%=currPage%></h2>
+      <ul class="category-list">
+        <% for(const collection in data){%>
+        <li><a href="/<%=currPage%>/<%=collection%> "><%=collection %></a></li>
+        <%} %>
+      </ul>
+      <%-include('../partials/recentlyAdded')%>
+    </div>
+    <div class="col-lg-3"><%- include('../partials/sidemenu') %></div>
+  </div>
+</div>

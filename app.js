@@ -18,6 +18,7 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.set("view engine", "ejs");
+
 app.engine("ejs", ejsmate);
 app.set("vews", path.join(__dirname, "views"));
 
@@ -41,8 +42,19 @@ app.get(
   asyncWrapper(async (req, res) => {
     const recentlyAdded = await Content.find({ accessRestriction: "public" })
       .sort({ dateAdded: -1 })
-      .limit(10);
-    res.render("home", { recentlyAdded, currPage: "home" });
+      .limit(7);
+    let { authors, collections } = await Cartegory.findOne();
+    authors = [...Object.keys(authors)];
+    authors = authors.length > 10 ? authors.slice(0, 10) : authors;
+    collections = [...Object.keys(collections)];
+    collections =
+      collections.length > 10 ? collections.slice(0, 10) : collections;
+    res.render("home", {
+      recentlyAdded,
+      currPage: "home",
+      authors,
+      collections,
+    });
   })
 );
 
@@ -53,13 +65,9 @@ app.post(
   "/repositoryadmin/add",
   asyncWrapper(async (req, res) => {
     let { author, collection } = req.body;
-    author = author.split(",");
-    collection = collection.split(",");
 
     const newContent = new Content({
       ...req.body,
-      authors: author,
-      collections: collection,
       contentKey:
         "5df59fe3-d507-46d3-b989-2b77c151ae24-Abdulahi Abdi Isaac-Sustainable Provision of Digital Information Systems and Services in Academic Libraries A Case of the University of Nairobi Library System 2017.pdf",
       contentUrl:
@@ -101,14 +109,6 @@ app.post(
   })
 );
 app.get(
-  "/collections",
-  asyncWrapper(async (req, res) => {
-    const data = await Cartegory.findOne();
-    console.log(data);
-  })
-);
-
-app.get(
   "/calmconsultdocuments/:id",
   asyncWrapper(async (req, res) => {
     const { id } = req.params;
@@ -116,6 +116,87 @@ app.get(
     res.render("content/single", { document, id, currPage: "singledocument" });
   })
 );
+app.get(
+  "/:cartegories",
+  asyncWrapper(async (req, res) => {
+    const { cartegories } = req.params;
+    const { authors, collections } = await Cartegory.findOne();
+    const data = cartegories === "authors" ? authors : collections;
+    const recentlyAdded = await Content.find().sort({ dateAdded: -1 }).limit(6);
+
+    res.render("content/cartegories", {
+      data,
+      currPage: cartegories,
+      recentlyAdded,
+    });
+  })
+);
+
+app.get(
+  "/calmconsult/repoitorysearch/:page",
+  asyncWrapper(async (req, res) => {
+    let page = Number(req.query.page || 1);
+    const { query, searchMode } = req.query;
+    console.log(query, searchMode);
+    let documents;
+    if (searchMode === "authors") {
+      documents = await Content.find({ authors: { $in: [query] } });
+    }
+    if (searchMode === "collections") {
+      documents = await Content.find({ collections: { $in: [query] } });
+    }
+    if (searchMode === undefined || searchMode === "general") {
+      documents = await Content.find({ $text: { $search: query } });
+    }
+    console.log(documents);
+  })
+);
+
+app.get(
+  "/:cartegories/:singleCategory",
+  asyncWrapper(async (req, res) => {
+    let page = Number(req.query.page || 1);
+    const { cartegories, singleCategory } = req.params;
+    const { authors, collections } = await Cartegory.findOne();
+    const data = cartegories === "authors" ? authors : collections;
+    let documents;
+    let totalItems;
+    if (cartegories === "collections") {
+      totalItems = await Content.find({
+        collections: { $in: [singleCategory] },
+      }).countDocuments();
+      documents = await Content.find({ collections: { $in: [singleCategory] } })
+        .sort({ dateAdded: -1 })
+        .limit(10)
+        .skip((page - 1) * 10);
+    }
+    if (cartegories === "authors") {
+      totalItems = await Content.find({
+        authors: { $in: [singleCategory] },
+      }).countDocuments();
+      documents = await Content.find({ authors: { $in: [singleCategory] } })
+        .sort({ dateAdded: -1 })
+        .limit(10)
+        .skip((page - 1) * 10);
+    }
+    let perPage = 10;
+    let pages = Math.ceil(totalItems / perPage);
+    const totalpages = page + 3 >= pages ? pages : page + 3;
+
+    res.render("content/singleCategory", {
+      data,
+      page,
+      totalpages,
+      totalItems,
+      pages,
+      documents,
+      currPage: singleCategory,
+      cartegories,
+      id: "",
+    });
+  })
+);
+
 app.get(
   "/calmconsultdocuments/:id/edit",
   asyncWrapper(async (req, res) => {
@@ -137,6 +218,31 @@ app.put(
       collections: collection,
     });
     res.redirect("/");
+  })
+);
+
+app.get(
+  "/calmconsult/repoitory/alldocuments",
+  asyncWrapper(async (req, res) => {
+    let page = Number(req.query.page || 1);
+    const totalItems = await Content.find().countDocuments();
+    const documents = await Content.find()
+      .limit(10)
+      .skip((page - 1) * 10);
+    let perPage = 10;
+    let pages = Math.ceil(totalItems / perPage);
+    // let startFrom = (page - 1) * perPage;
+    const totalpages = page + 3 >= pages ? pages : page + 3;
+
+    res.render("content/alluploadeddocuments", {
+      currPage: "alldocuments",
+      documents,
+      pages,
+      totalpages,
+      page,
+      totalItems,
+      id: "",
+    });
   })
 );
 

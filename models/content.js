@@ -28,12 +28,21 @@ const contentSchema = new Schema({
     type: String,
     required: true,
   },
+  dateAdded: { type: Date, default: Date.now },
   accessRestriction: {
     type: String,
     enum: ["private", "public"],
     default: "public",
   },
   collections: [],
+});
+
+contentSchema.index({
+  title: "text",
+  authors: ["text"],
+  abstract: "text",
+  subject: "text",
+  // collections: ["text"],
 });
 
 const Content = mongoose.model("Content", contentSchema);

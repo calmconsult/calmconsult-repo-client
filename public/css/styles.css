@@ -666,21 +666,24 @@ p {
   padding-right: 0px;
 }
 
-.repository .recently-added ul {
+.repository .recently-added-articles {
   list-style-type: none;
   padding-left: 0rem;
 }
 
-.repository .recently-added ul li {
+.repository .recently-added-articles li {
   margin-bottom: 0.8rem;
 }
 
-.repository .recently-added h4,
-.repository .recently-added .article-abstract {
+.repository .recently-added-articles h4 {
   font-size: 17px;
   margin-bottom: 0rem;
 }
-.repository .recently-added h4 a {
+.repository .recently-added-articles .article-abstract {
+  font-size: 15px;
+  margin-bottom: 0rem;
+}
+.repository .recently-added-articles h4 a {
   color: var(--blue);
 }
 .repository .authorcapital {
@@ -827,4 +830,85 @@ p {
 .repository .edit-form .custom-file-label {
   height: fit-content;
   padding-right: 5rem;
+}
+
+.repository .category-list {
+  list-style-type: none;
+  font-weight: bold;
+  padding-bottom: 2rem;
+  max-height: 70vh;
+  overflow-y: scroll;
+  background-color: var(--lighterblack);
+  padding-top: 1rem;
+}
+
+.repository .category-list li a {
+  color: var(--purple);
+}
+
+.repository .cartegories h2:nth-of-type(2) {
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  padding-left: 1rem;
+  font-size: 1.1rem;
+  background-color: var(--purplelight);
+  color: var(--black);
+}
+.repository .cartegories h2:nth-of-type(2) span {
+  color: var(--white);
+}
+.repository .search-mode {
+  color: var(--whitedark);
+}
+.repository .search-mode label:first-child {
+  margin-bottom: 0rem;
+  margin-top: 0.5rem;
+}
+.repository .boldme {
+  font-weight: bold;
+  color: var(--purple);
+}
+
+.repository .pages-show {
+  padding: 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.repository .pages-show p {
+  font-weight: bold;
+  color: var(--purple);
+  margin-bottom: 0px;
+}
+
+.repository .pages-show p a {
+  color: var(--blue);
+}
+
+.repository .pages-show .page-holder {
+  height: 30px;
+  width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid var(--purple);
+  background-color: transparent;
+  color: var(--purple);
+  margin: 0.5rem 0.2rem;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  -webkit-box-shadow: 0px 2px 5px -3px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 2px 5px -3px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 2px 5px -3px rgba(0, 0, 0, 0.75);
+}
+
+.repository .pages-show .page-holder.active {
+  background-color: var(--purplelight);
+  color: var(--white);
+  pointer-events: none;
 }

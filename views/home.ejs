@@ -2,39 +2,21 @@
 <div class="container recently-added">
   <div class="row">
     <div class="col-lg-9">
-      <h2>recently added</h2>
-      <ul class="recently-added-articles">
-        <% for(const content of recentlyAdded) {%>
-        <li>
-          <h4>
-            <a href="/calmconsultdocuments/<%=content.id %> ">
-              <%=content.title %>
-            </a>
-          </h4>
-          <div class="article-muted text-muted">
-            <span class="author">
-              <% for(const author of content.authors) {%>
-              <small class="authorcapital"> <%= author %> </small>
-              , <% } %>
-            </span>
-            <span class="publisherDate">
-              <small>
-                (
-                <span class="publisher"> Calm Consult </span>
-                <span class="date"> <%=content.publishDate %> </span>
-                )
-              </small>
-            </span>
-          </div>
-          <div class="article-abstract">
-            The major aim of this study was to develop a records preservation
-            system at Uganda Prisons Service [UPS]. The objectives of the study
-            were to study the current systems at the Uganda Prisons Service that
-            helped to identify
-          </div>
-        </li>
-        <% } %>
+      <h5>Collections</h5>
+      <ul class="category-list">
+        <% for(const collection of collections){%>
+        <li><a href="/collections/<%=collection%> "><%=collection%></a></li>
+        <%} %>
       </ul>
+
+      <h5>Authors</h5>
+      <ul class="category-list">
+        <% for(const author of authors){%>
+        <li><a href="/authors/<%=author%> "><%=author%></a></li>
+        <%} %>
+      </ul>
+
+      <%-include('./partials/recentlyAdded')%>
     </div>
     <div class="col-lg-3"><%-include('./partials/sidemenu') %></div>
   </div>

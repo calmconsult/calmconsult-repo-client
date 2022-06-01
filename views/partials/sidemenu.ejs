@@ -1,7 +1,7 @@
 <div class="sidemenu">
   <h3>Search</h3>
   <div class="sections search">
-    <form action="">
+    <form action="/calmconsult/repoitorysearch/1" method="get">
       <fieldset>
         <div class="input-group">
           <input
@@ -10,9 +10,51 @@
             class="ds-text-field form-control"
             name="query"
           />
+
           <button type="submit">
             <i class="fas fa-search"></i>
           </button>
+        </div>
+      </fieldset>
+      <fieldset class="form-group">
+        <div class="row search-mode">
+          <legend class="col-form-label col-12 pt-0">
+            <label>Switch search mode</label>
+          </legend>
+          <div class="col-sm-10">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="searchMode"
+                id="general"
+                value="general"
+              />
+              <label class="form-check-label" for="general"> General </label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="searchMode"
+                id="authors"
+                value="authors"
+              />
+              <label class="form-check-label" for="authors"> authors </label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="searchMode"
+                id="collections"
+                value="collections"
+              />
+              <label class="form-check-label" for="collections">
+                collections
+              </label>
+            </div>
+          </div>
         </div>
       </fieldset>
     </form>
@@ -24,6 +66,7 @@
     </li>
     <li><a href="/collections">Collections</a></li>
     <li><a href="/authors">Authors</a></li>
+    <li><a href="/calmconsult/repoitory/alldocuments">All documents</a></li>
     <li><a href="/repositoryadmin/add">Add new document</a></li>
     <% if(currPage==='singledocument'){ %>
     <li>
