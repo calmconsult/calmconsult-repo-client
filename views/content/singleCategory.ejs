@@ -47,8 +47,8 @@
       </ul>
     </ul>
     <div class="pages-show">
-      <p class="pr-2 d-none d-md-block">pages</p>
       <% if(pages || page > 1) {%>
+        <p class="pr-2 d-none d-md-block">pages</p>
         <% if(page>1){ %>
           <% if(id){%>
           <a class="extend-show-more " href="/<%=cartegories%>/<%=currPage%>/<%=id%>?page=<%=(page-1)%>" >Prev</a>
@@ -75,6 +75,6 @@
       <% } %> 
     </div>
     </div>
-    <div class="col-lg-3"><%- include('../partials/sidemenu') %></div>
+    <div class="col-lg-3 d-none d-lg-block"><%- include('../partials/sidemenu') %></div>
   </div>
 </div>

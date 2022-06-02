@@ -67,6 +67,7 @@
     <li><a href="/collections">Collections</a></li>
     <li><a href="/authors">Authors</a></li>
     <li><a href="/calmconsult/repoitory/alldocuments">All documents</a></li>
+    <% if(currUser){%>
     <li><a href="/repositoryadmin/add">Add new document</a></li>
     <% if(currPage==='singledocument'){ %>
     <li>
@@ -75,7 +76,7 @@
     <li class="danger">
       <a id="delete-document" href="">Delete this document</a>
     </li>
-    <% } %>
+    <% } %> <% } %>
   </ul>
   <h3>Login</h3>
   <div class="sections login">
@@ -105,8 +106,10 @@
         Login <i class="fas fa-user-check"></i>
       </button>
     </form>
+    <% if(currUser){%>
     <ul class="sections quick-links">
       <li><a href="/calmconsult/register">Register user</a></li>
     </ul>
+    <%} %>
   </div>
 </div>

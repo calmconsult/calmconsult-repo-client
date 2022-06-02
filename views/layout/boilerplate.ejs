@@ -28,15 +28,39 @@
 
     <main class="section-layout repository">
       <div class="repoNav">
-        <div class="container d-flex">
-          <a href="/">
-            <i class="fas fa-home"></i>Welcome to Calm consult Repository
-          </a>
+        <div class="container d-flex affect-small">
+          <a href="/"> <i class="fas fa-home"></i>Calm consult Repository </a>
           <% if(currUser) {%>
           <span><i class="fas fa-user-alt"></i> <%=currUser.username%> </span>
           <a class="logout" href="/calmconsult/logout">Logout</a>
+          <div class="dropdown d-md-none">
+            <a
+              class="repoNavdropdown dropdown-toggle"
+              href="#"
+              role="button"
+              id="user-dropdown"
+              data-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="fas fa-user-alt"></i>
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="user-dropdown">
+              <p><%=currUser.username%></p>
+              <a class="logout" href="/calmconsult/logout">Logout</a>
+            </div>
+          </div>
           <% } %>
+          <div id="sidemenushow" class="sidemenushow d-lg-none">
+            <button class="calm2-button">
+              <i class="fas fa-angle-double-left"></i>
+            </button>
+          </div>
         </div>
+      </div>
+      <div class="smallsidemenu d-lg-none">
+        <button class="close-smallmenu">Close</button>
+        <%-include('../partials/sidemenu') %>
       </div>
       <% if(currPage ==="singledocument") {%>
       <div id="delete-overlay">
@@ -56,7 +80,9 @@
           </div>
         </div>
       </div>
-      <% } %> <%-body %>
+      <% } %> <% if(success.length){%> <%-include('../partials/successflash')%>
+      <% } %> <% if(error.length){%> <%-include('../partials/errorflash')%> <% }
+      %> <%-body %>
     </main>
     <%- include('../partials/Footer') %>
     <script
@@ -66,6 +92,11 @@
     <script
       src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
       crossorigin
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
     ></script>
     <script src="/js/libs/jquery-3.4.1.min.js"></script>
     <script src="/js/libs/bootstrap.min.js"></script>

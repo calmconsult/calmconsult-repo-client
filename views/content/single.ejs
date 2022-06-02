@@ -43,9 +43,7 @@
           <div class="small-text collections">
             <h5>Collections</h5>
             <% for(const collection of document.collections.split(',')){ %>
-            <a href="/documents/collections/<%=collection%> "
-              ><%=collection %>
-            </a>
+            <a href="/collections/<%=collection%> "><%=collection %> </a>
             <%} %>
           </div>
         </div>
@@ -53,6 +51,8 @@
 
       <div></div>
     </div>
-    <div class="col-lg-3"><%-include('../partials/sidemenu') %></div>
+    <div class="col-lg-3 d-none d-lg-block">
+      <%-include('../partials/sidemenu') %>
+    </div>
   </div>
 </div>

@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config({ path: "./.env" });
+}
 const express = require("express"),
   path = require("path"),
   Content = require("./models/content"),
@@ -6,19 +9,46 @@ const express = require("express"),
   ejsmate = require("ejs-mate"),
   mongoose = require("mongoose"),
   { v4: uuid } = require("uuid"),
+  { isLoggedIn } = require("./middlewear/middlewares"),
   methodOverride = require("method-override"),
   appError = require("./utils/appError"),
   asyncWrapper = require("./utils/asyncWrapper"),
   passport = require("passport"),
   LocalStrategy = require("passport-local"),
   expressSsession = require("express-session"),
+  multer = require("multer"),
+  multerS3 = require("multer-s3"),
+  { S3 } = require("aws-sdk/"),
+  flash = require("connect-flash"),
+  favicon = require("serve-favicon"),
   app = express();
+
+const s3 = new S3({
+  accessKeyId: process.env.AmazonS3_Access_Key_ID,
+  secretAccessKey: process.env.AmazonS3_Secret_Access_Key,
+});
+
+const uploaddocument = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: "calmconsult-repository",
+    // acl: "public-read",
+    metadata: function (req, file, cb) {
+      const filePath = `${uuid()}-${file.originalname}`;
+      cb(null, { fieldName: filePath });
+    },
+    key: function (req, file, cb) {
+      const filePath = `${uuid()}-${file.originalname}`;
+      cb(null, filePath);
+    },
+  }),
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 app.use(methodOverride("_method"));
-// app.use(favicon(__dirname + "/public/images/favicon.png"));
+app.use(favicon(__dirname + "/public/images/favicon.png"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   expressSsession({
@@ -28,6 +58,7 @@ app.use(
     // cookie: { secure: true }
   })
 );
+app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -36,6 +67,8 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
   res.locals.currUser = req.user;
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
   next();
 });
 
@@ -87,7 +120,8 @@ app.post(
     failureFlash: true,
   }),
   (req, res) => {
-    res.redirect("/");
+    req.flash("success", `you are logged in as ${req.user.username}`);
+    res.redirect(req.headers.referer);
   }
 );
 
@@ -100,6 +134,7 @@ app.post(
       const registeredUSer = await User.register(registerUser, password);
       req.login(registeredUSer, (err) => {
         if (err) return next(err);
+        req.flash("success", "you are logged in");
         res.redirect("/");
       });
     } catch (error) {
@@ -111,7 +146,7 @@ app.post(
   })
 );
 
-app.get("/calmconsult/logout", (req, res, next) => {
+app.get("/calmconsult/logout", isLoggedIn, (req, res, next) => {
   req.logout(function (err) {
     if (err) {
       return next(err);
@@ -120,23 +155,26 @@ app.get("/calmconsult/logout", (req, res, next) => {
   });
 });
 
-app.get("/repositoryadmin/add", (req, res) => {
+app.get("/repositoryadmin/add", isLoggedIn, (req, res) => {
   res.render("content/addcontent", { currPage: "adddocument" });
 });
 app.post(
   "/repositoryadmin/add",
+  isLoggedIn,
+  uploaddocument.single("uploadedDocument"),
   asyncWrapper(async (req, res) => {
     let { authors: author, collections: collection } = req.body;
+    const { file } = req;
+    console.log(file);
     author = author.split(",");
     collection = collection.split(",");
 
     const newContent = new Content({
       ...req.body,
-      contentKey:
-        "5df59fe3-d507-46d3-b989-2b77c151ae24-Abdulahi Abdi Isaac-Sustainable Provision of Digital Information Systems and Services in Academic Libraries A Case of the University of Nairobi Library System 2017.pdf",
-      contentUrl:
-        "https://asbatlibrary.s3.eu-central-1.amazonaws.com/5df59fe3-d507-46d3-b989-2b77c151ae24-Abdulahi%20Abdi%20Isaac-Sustainable%20Provision%20of%20Digital%20Information%20Systems%20and%20Services%20in%20Academic%20Libraries%20A%20Case%20of%20the%20University%20of%20Nairobi%20Library%20System%202017.pdf",
+      contentUrl: file.location,
+      contentKey: file.key,
     });
+
     let cartegories = await Cartegory.find();
     if (!cartegories.length) {
       let authors = {};
@@ -169,6 +207,7 @@ app.post(
     }
 
     await newContent.save();
+    req.flash("success", "document added");
     res.redirect("/");
   })
 );
@@ -251,6 +290,8 @@ app.get(
   "/:cartegories/:singleCategory",
   asyncWrapper(async (req, res) => {
     let page = Number(req.query.page || 1);
+    let documents;
+    let totalItems;
     const { cartegories, singleCategory } = req.params;
     let data = await Content.find({ accessRestriction: "public" });
     if (cartegories === "authors") {
@@ -259,39 +300,33 @@ app.get(
       data = [...new Set(data.map((el) => el.collections))];
     }
 
-    let documents = await Content.find({ cartegories: singleCategory }).sort({
-      dateAdded: -1,
-    });
-    let totalItems = await Content.find({ cartegories: singleCategory })
-      .sort({ dateAdded: -1 })
-      .countDocuments();
+    const findsiglecartegory = { $regex: singleCategory, $options: "i" };
+    if (cartegories === "authors") {
+      documents = await Content.find({
+        authors: findsiglecartegory,
+      }).sort({
+        dateAdded: -1,
+      });
+      totalItems = await Content.find({ authors: singleCategory })
+        .sort({ dateAdded: -1 })
+        .countDocuments();
+    }
+    if (cartegories === "collections") {
+      documents = await Content.find({
+        collections: findsiglecartegory,
+      }).sort({
+        dateAdded: -1,
+      });
+      totalItems = await Content.find({ collections: singleCategory })
+        .sort({ dateAdded: -1 })
+        .countDocuments();
+    }
+
     documents = documents.slice((page - 1) * 10, page * 10);
-    // const { authors, collections } = await Cartegory.findOne();
-    // const data = cartegories === "authors" ? authors : collections;
-    // let documents;
-    // let totalItems;
-    // if (cartegories === "collections") {
-    //   totalItems = await Content.find({
-    //     collections: { $in: [singleCategory] },
-    //   }).countDocuments();
-    //   documents = await Content.find({ collections: { $in: [singleCategory] } })
-    //     .sort({ dateAdded: -1 })
-    //     .limit(10)
-    //     .skip((page - 1) * 10);
-    // }
-    // if (cartegories === "authors") {
-    //   totalItems = await Content.find({
-    //     authors: { $in: [singleCategory] },
-    //   }).countDocuments();
-    //   documents = await Content.find({ authors: { $in: [singleCategory] } })
-    //     .sort({ dateAdded: -1 })
-    //     .limit(10)
-    //     .skip((page - 1) * 10);
-    // }
+
     let perPage = 10;
     let pages = Math.ceil(totalItems / perPage);
     const totalpages = page + 3 >= pages ? pages : page + 3;
-
     res.render("content/singleCategory", {
       data,
       page,
@@ -308,6 +343,7 @@ app.get(
 
 app.get(
   "/calmconsultdocuments/:id/edit",
+  isLoggedIn,
   asyncWrapper(async (req, res) => {
     const document = await Content.findById(req.params.id);
     res.render("content/editcontent", { currPage: "editdocument", document });
@@ -316,6 +352,7 @@ app.get(
 
 app.put(
   "/calmconsultdocuments/:id/edit",
+  isLoggedIn,
   asyncWrapper(async (req, res) => {
     const { id } = req.params;
     let { authors: author, collections: collection } = req.body;
@@ -355,9 +392,19 @@ app.get(
 
 app.delete(
   "/calmconsultdocuments/:id/delete",
+  isLoggedIn,
   asyncWrapper(async (req, res) => {
     const { id } = req.params;
+    const document = await Content.findById(id);
+    const params = {
+      Bucket: "calmconsult-repository",
+      Key: document.contentKey,
+    };
+    s3.deleteObject(params, function (err, data) {
+      if (err) console.log(err, err.stack);
+    });
     await Content.findByIdAndDelete(id);
+    req.flash("success", "document deleted");
     res.redirect("/");
   })
 );
