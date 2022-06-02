@@ -68,3 +68,21 @@ $(document).ready(function () {
     });
   }
 });
+
+const openSmallMenu = document.getElementById("sidemenushow");
+const smallmenu = document.getElementById("smallsidemenu");
+const closeSmallMenu = document.getElementById("sidemenuclose");
+if (openSmallMenu) {
+  openSmallMenu.addEventListener("click", () => {
+    if (smallmenu.classList.contains("close")) {
+      smallmenu.classList.remove("close");
+    }
+    smallmenu.classList.add("show");
+  });
+}
+if (closeSmallMenu) {
+  closeSmallMenu.addEventListener("click", function () {
+    smallmenu.classList.remove("show");
+    smallmenu.classList.add("close");
+  });
+}

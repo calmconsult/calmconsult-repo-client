@@ -1055,6 +1055,7 @@ p {
   align-items: center;
   border: 1px solid var(--white);
   margin-left: 4px;
+  font-size: 15px;
 }
 
 .repository .repoNav .calm2-button:active,
@@ -1064,8 +1065,6 @@ p {
 
 .smallsidemenu {
   width: 100vw;
-  /* margin-left: auto; */
-  position: absolute;
   z-index: 8;
   right: 0;
   padding-left: 30%;
@@ -1074,6 +1073,33 @@ p {
   position: fixed;
   top: 0;
   overflow-y: scroll;
+  right: 0;
+  display: none;
+  transition: all 0.3s ease;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+}
+
+.smallsidemenu.show {
+  display: block;
+  animation: opensmallmenu 0.45s linear;
+  -webkit-animation: opensmallmenu 0.45s linear;
+}
+.smallsidemenu.close {
+  display: none;
+}
+
+@keyframes opensmallmenu {
+  from {
+    left: 100%;
+    opacity: 0;
+  }
+  to {
+    left: 0%;
+    opacity: 1;
+  }
 }
 
 .smallsidemenu .close-smallmenu {
@@ -1090,8 +1116,16 @@ p {
   -ms-transition: all 0.29s ease;
   -o-transition: all 0.29s ease;
 }
+.smallsidemenu .close-smallmenu:focus,
+.smallsidemenu .close-smallmenu:active {
+  outline: none;
+}
 .smallsidemenu .close-smallmenu:hover {
+  color: var(--white);
   background-color: var(--whitedark);
+}
+.smallsidemenu .close-smallmenu span {
+  display: block;
 }
 
 @media (max-width: 1199px) {

@@ -58,8 +58,10 @@
           </div>
         </div>
       </div>
-      <div class="smallsidemenu d-lg-none">
-        <button class="close-smallmenu">Close</button>
+      <div id="smallsidemenu" class="smallsidemenu d-lg-none">
+        <button id="sidemenuclose" class="close-smallmenu">
+          Close <span>X</span>
+        </button>
         <%-include('../partials/sidemenu') %>
       </div>
       <% if(currPage ==="singledocument") {%>
