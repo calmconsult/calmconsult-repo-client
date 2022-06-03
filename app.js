@@ -20,8 +20,9 @@ const express = require("express"),
   multerS3 = require("multer-s3"),
   { S3 } = require("aws-sdk/"),
   flash = require("connect-flash"),
-  favicon = require("serve-favicon"),
-  app = express();
+  favicon = require("serve-favicon");
+
+const app = express();
 
 const s3 = new S3({
   accessKeyId: process.env.AmazonS3_Access_Key_ID,
