@@ -1208,6 +1208,9 @@ p {
   .dk-footer .contact-us.contact-us-last {
     padding-left: 80px;
   }
+  .dk-footer .contact-us .contact-info {
+    margin-left: 0px;
+  }
   .repository .repoNav .affect-small {
     max-width: 100%;
   }
