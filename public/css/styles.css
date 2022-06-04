@@ -716,6 +716,7 @@ p {
 .repository .recently-added-articles .article-abstract {
   font-size: 15px;
   margin-bottom: 0rem;
+  line-height: 1.2;
 }
 .repository .recently-added-articles h4 a {
   color: var(--blue);

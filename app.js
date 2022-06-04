@@ -93,15 +93,34 @@ db.once("open", () => {
 
 app.listen(port, () => console.log(`App listenning at port ${port}`));
 
+const cutSt = (documents) => {
+  documents.map((el) => {
+    let dcString = el.abstract;
+    let maxlength = 223;
+    if (dcString.length > maxlength) {
+      let trimmedString = dcString.substring(0, maxlength);
+      trimmedString = trimmedString.substring(
+        0,
+        Math.min(trimmedString.length, trimmedString.lastIndexOf(" "))
+      );
+      el.abstract = trimmedString + " ...";
+    }
+    return el;
+  });
+  return documents;
+};
+
 app.get(
   "/",
   asyncWrapper(async (req, res) => {
-    const recentlyAdded = await Content.find({ accessRestriction: "public" })
+    let recentlyAdded = await Content.find({ accessRestriction: "public" })
       .sort({ dateAdded: -1 })
       .limit(7);
+    cutSt(recentlyAdded);
     let alldocs = await Content.find({ accessRestriction: "public" });
     const authors = [...new Set(alldocs.map((el) => el.authors))];
     const collections = [...new Set(alldocs.map((el) => el.collections))];
+
     res.render("home", {
       recentlyAdded,
       currPage: "home",
@@ -231,7 +250,8 @@ app.get(
       data = [...new Set(data.map((el) => el.collections))];
     }
 
-    const recentlyAdded = await Content.find().sort({ dateAdded: -1 }).limit(6);
+    let recentlyAdded = await Content.find().sort({ dateAdded: -1 }).limit(6);
+    cutSt(recentlyAdded);
 
     res.render("content/cartegories", {
       data,
@@ -270,6 +290,7 @@ app.get(
       }).countDocuments();
     }
     documents = documents.slice((page - 1) * 10, page * 10);
+    cutSt(documents);
     let perPage = 10;
     let pages = Math.ceil(totalItems / perPage);
     const totalpages = page + 3 >= pages ? pages : page + 3;
@@ -313,18 +334,19 @@ app.get(
         .countDocuments();
     }
     if (cartegories === "collections") {
-      documents = await Content.find({
-        collections: findsiglecartegory,
-      }).sort({
-        dateAdded: -1,
-      });
+      documents = await Content.find(
+        {
+          $text: { $search: singleCategory },
+        },
+        { score: { $meta: "textScore" } }
+      ).sort({ score: { $meta: "textScore" } });
       totalItems = await Content.find({ collections: singleCategory })
         .sort({ dateAdded: -1 })
         .countDocuments();
     }
 
     documents = documents.slice((page - 1) * 10, page * 10);
-
+    cutSt(documents);
     let perPage = 10;
     let pages = Math.ceil(totalItems / perPage);
     const totalpages = page + 3 >= pages ? pages : page + 3;
@@ -371,14 +393,14 @@ app.get(
   asyncWrapper(async (req, res) => {
     let page = Number(req.query.page || 1);
     const totalItems = await Content.find().countDocuments();
-    const documents = await Content.find()
+    let documents = await Content.find()
       .limit(10)
       .skip((page - 1) * 10);
     let perPage = 10;
     let pages = Math.ceil(totalItems / perPage);
     // let startFrom = (page - 1) * perPage;
     const totalpages = page + 3 >= pages ? pages : page + 3;
-
+    cutSt(documents);
     res.render("content/alluploadeddocuments", {
       currPage: "alldocuments",
       documents,
