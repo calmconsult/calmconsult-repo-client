@@ -54,10 +54,17 @@ $(document).ready(function () {
   }
 
   const deleteDocument = document.getElementById("delete-document");
+  const deleteDocument2 = document.getElementById("delete-document2");
   const deletecontainer = document.getElementById("delete-overlay");
   const noDelete = document.getElementById("no-delete");
   if (deleteDocument) {
     deleteDocument.addEventListener("click", (e) => {
+      e.preventDefault();
+      deletecontainer.style.display = "block";
+    });
+  }
+  if (deleteDocument2) {
+    deleteDocument2.addEventListener("click", (e) => {
       e.preventDefault();
       deletecontainer.style.display = "block";
     });
