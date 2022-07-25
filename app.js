@@ -235,6 +235,13 @@ app.get(
   "/calmconsultdocuments/:id",
   asyncWrapper(async (req, res) => {
     const { id } = req.params;
+    if ((id.indexOf(".html") || id.indexOf(".com")) > 1) {
+      req.flash(
+        "error",
+        "Sorry you have been blocked from navigating that way"
+      );
+      return res.redirect("/");
+    }
     const document = await Content.findById(id);
     res.render("content/single", { document, id, currPage: "singledocument" });
   })
