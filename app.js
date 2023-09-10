@@ -248,7 +248,7 @@ app.get(
       Key: document.contentKey,
     };
     const command = new GetObjectCommand(getObjectParams);
-    const url = await getSignedUrl(S3, command, { expiresIn: 60 * 60 * 2, });
+    const url = await getSignedUrl(S3, command, { expiresIn: 60 * 30, });
     document.documentURL = url;
     res.render("content/single", { document, id, currPage: "singledocument" });
   })
