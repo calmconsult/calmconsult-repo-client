@@ -1,3 +1,4 @@
 
 .env
 secret creds.csv
+node_modules
