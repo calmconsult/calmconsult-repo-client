@@ -18,21 +18,18 @@ const express = require("express"),
   expressSsession = require("express-session"),
   multer = require("multer"),
   multerS3 = require("multer-s3"),
-  { S3 } = require("aws-sdk/"),
   flash = require("connect-flash"),
-  favicon = require("serve-favicon");
+  { getSignedUrl } = require("@aws-sdk/s3-request-presigner"),
+  favicon = require("serve-favicon"),
+ { s3,S3,GetObjectCommand } = require("./asw_config/aws_config"),
+ app = express();
 
-const app = express();
 
-const s3 = new S3({
-  accessKeyId: process.env.AmazonS3_Access_Key_ID,
-  secretAccessKey: process.env.AmazonS3_Secret_Access_Key,
-});
 
 const uploaddocument = multer({
   storage: multerS3({
     s3: s3,
-    bucket: "calmconsult-repository",
+    bucket:process.env.AmazonS3_Bucket_Name,
     // acl: "public-read",
     metadata: function (req, file, cb) {
       const filePath = `${uuid()}-${file.originalname}`;
@@ -78,7 +75,7 @@ app.set("view engine", "ejs");
 app.engine("ejs", ejsmate);
 app.set("vews", path.join(__dirname, "views"));
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3011;
 const DBURL = process.env.DBURL || "mongodb://localhost:27017/calmconsult";
 mongoose.connect(DBURL, {
   useNewUrlParser: true,
@@ -129,6 +126,9 @@ app.get(
     });
   })
 );
+
+
+
 app.get("/calmconsult/register", (req, res) => {
   res.render("user/register", { currPage: "register" });
 });
@@ -243,6 +243,13 @@ app.get(
       return res.redirect("/");
     }
     const document = await Content.findById(id);
+    const getObjectParams = {
+      Bucket: process.env.AmazonS3_Bucket_Name,
+      Key: document.contentKey,
+    };
+    const command = new GetObjectCommand(getObjectParams);
+    const url = await getSignedUrl(S3, command, { expiresIn: 60 * 60 * 2, });
+    document.documentURL = url;
     res.render("content/single", { document, id, currPage: "singledocument" });
   })
 );
@@ -427,7 +434,7 @@ app.delete(
     const { id } = req.params;
     const document = await Content.findById(id);
     const params = {
-      Bucket: "calmconsult-repository",
+      Bucket: process.env.AmazonS3_Bucket_Name,
       Key: document.contentKey,
     };
     s3.deleteObject(params, function (err, data) {
